@@ -41,10 +41,15 @@ def create_app():
     initialise_extensions(app)
     register_blueprints(app)
 
+    from investors.seed import load_csv
+    app.cli.add_command(load_csv)
+
     return app
 
 def register_blueprints(app:Flask):
-    pass
+    from investors.api import homepage_blueprint
+
+    app.register_blueprint(homepage_blueprint, url_prefix='/api/v1/homepage')
 
 def initialise_extensions(app:Flask):
     apifairy.init_app(app)
