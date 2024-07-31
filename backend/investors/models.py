@@ -18,13 +18,10 @@ class AssetClassEnum(enum.Enum):
 
 class Investor(db.Model):
     __tablename__ = 'investors'
-    __table_args__ = {
-        "info": {"alembic_key": "investments"}
-    }
 
     id = db.Column(db.Integer, primary_key=True)
     investory_type = db.Column(db.Enum(InvestoryTypeEnum), nullable=False)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False, onupdate=datetime.now(timezone.utc))

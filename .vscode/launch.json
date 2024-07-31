@@ -5,21 +5,87 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Local: Run Flask App",
+            "name": "Flask: Run Local Flask App",
             "type": "python",
             "request": "launch",
             "cwd": "${workspaceFolder}/backend",
             "module": "flask",
-            "env": {
-                "FLASK_APP": "app.py"
-            },
             "args": [
                 "run",
                 "--debug",
                 "--no-debugger"
             ],
+            "env": {
+                "FLASK_APP": "investors/app.py",
+                "FLASK_DEBUG": "1"
+            },
             "jinja": true,
             "justMyCode": true
+        },
+        {
+            "name": "Flask: Alembic - Initialise",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "flask",
+            "args": [
+                "db",
+                "init",
+                "-d",
+                "investors/migrations"
+            ],
+            "env": {
+                "FLASK_APP": "investors/app.py",
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Flask: Alembic - Create Migrations",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "flask",
+            "args": [
+                "db",
+                "migrate",
+                "-d",
+                "investors/migrations"
+            ],
+            "env": {
+                "FLASK_APP": "investors/app.py",
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Flask: Alembic - Apply Migrations",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "flask",
+            "args": [
+                "db",
+                "upgrade",
+                "-d",
+                "investors/migrations"
+            ],
+            "env": {
+                "FLASK_APP": "investors/app.py",
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Flask: Seed data",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "flask",
+            "args": [
+                "seed-data",
+            ],
+            "env": {
+                "FLASK_APP": "investors/app.py",
+            },
+            "justMyCode": true
         }
-    ]
+    ],
 }
