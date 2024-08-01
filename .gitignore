@@ -10,4 +10,4 @@ venv/
 .env*
 !.env.local
 temp_dir/*
-frontend/
+frontend/node_modules/
