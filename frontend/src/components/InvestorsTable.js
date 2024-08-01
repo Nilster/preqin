@@ -51,7 +51,7 @@ export default function InvestorsTable({ selectedInvestor, setSelectedInvestor})
                       .map((row) => (
                         <TableRow
                           key={row.id}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: selectedInvestor.id === row.id ? 'rgba(0, 0, 255, 0.1)' : 'inherit'  }}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: selectedInvestor && selectedInvestor.id === row.id ? 'rgba(0, 0, 255, 0.1)' : 'inherit'  }}
                           hover
                         //   selected={seletectedTitle["id"] === row["id"]}
                           onClick={() => setSelectedInvestor(row)}
