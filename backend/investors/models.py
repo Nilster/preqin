@@ -1,6 +1,7 @@
 from investors.app import db
 from datetime import datetime, timezone
 import enum
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class InvestoryTypeEnum(enum.Enum):
     ASSET_MANAGER = "asset manager"
@@ -26,6 +27,10 @@ class Investor(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False, onupdate=datetime.now(timezone.utc))
 
+    @hybrid_property
+    def total_commitment(self):
+        return sum([commitment.amount for commitment in self.commitments])
+
 class Commitment(db.Model):
     __tablename__ = 'commitments'
 
@@ -35,3 +40,5 @@ class Commitment(db.Model):
     amount = db.Column(db.Integer, nullable=False) # Assuming amount in GBP
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False, onupdate=datetime.now(timezone.utc))
+
+    investor = db.relationship('Investor', backref='commitments', lazy=True)

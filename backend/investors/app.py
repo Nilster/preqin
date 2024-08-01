@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 from apifairy import APIFairy
 from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.exceptions import HTTPException, InternalServerError
+from flask import json
 
 # Initialize db
 db = SQLAlchemy()
@@ -40,6 +42,7 @@ def create_app():
 
     initialise_extensions(app)
     register_blueprints(app)
+    register_error_handlers(app)
 
     from investors.seed import load_csv
     app.cli.add_command(load_csv)
@@ -47,12 +50,30 @@ def create_app():
     return app
 
 def register_blueprints(app:Flask):
-    from investors.api import homepage_blueprint
+    from investors.api import investors_blueprint
 
-    app.register_blueprint(homepage_blueprint, url_prefix='/api/v1/homepage')
+    app.register_blueprint(investors_blueprint, url_prefix='/api/v1')
 
 def initialise_extensions(app:Flask):
     apifairy.init_app(app)
     db.init_app(app)
     ma.init_app(app)
     migrate.init_app(app, db)
+
+#Add custom json error handler response
+def register_error_handlers(app:Flask):
+
+    def json_error_response(error):
+        response = error.get_response()
+        response.data = json.dumps({
+            "code": error.code,
+            "message": error.name,
+            "description": error.description
+        })
+        response.content_type = "application/json"
+        return response
+    
+    #Note that in debug mode, handler for InternalServerError will not be used,
+    #in favour of interactive debugger
+    app.register_error_handler(InternalServerError, json_error_response)
+    app.register_error_handler(HTTPException, json_error_response)
